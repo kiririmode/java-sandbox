@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.jboss.resteasy.client.ClientExecutor;
@@ -18,7 +17,9 @@ public class ResteasyClient {
 		final int threadNum = 20;
 		final String uri = "http://192.168.99.100:8081";
 		
-		ClientConnectionManager connManager = new PoolingClientConnectionManager();
+		PoolingClientConnectionManager connManager = new PoolingClientConnectionManager();
+		connManager.setDefaultMaxPerRoute(10);
+		connManager.setMaxTotal(100);
 		HttpClient client = new DefaultHttpClient(connManager);
 
 		ExecutorService service = Executors.newFixedThreadPool(threadNum);
