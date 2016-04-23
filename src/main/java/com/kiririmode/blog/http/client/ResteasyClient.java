@@ -9,6 +9,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.jboss.resteasy.client.ClientExecutor;
 import org.jboss.resteasy.client.ClientRequest;
+import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.core.executors.ApacheHttpClient4Executor;
 
 public class ResteasyClient {
@@ -41,10 +42,15 @@ public class ResteasyClient {
 
 		public void run() {
 			ClientExecutor executor = new ApacheHttpClient4Executor(client);
+			ClientResponse<?> response = null;
 			try {
-				new ClientRequest(uri, executor).get();
+				response = new ClientRequest(uri, executor).get();
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				if (response != null) {
+					response.releaseConnection();
+				}
 			}
 		}
 
