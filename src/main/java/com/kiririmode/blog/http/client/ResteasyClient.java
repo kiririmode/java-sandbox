@@ -2,6 +2,7 @@ package com.kiririmode.blog.http.client;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -28,7 +29,9 @@ public class ResteasyClient {
 		}
 
 		service.shutdown();
-		Thread.sleep(10000L);
+		service.awaitTermination(10L, TimeUnit.SECONDS);
+		
+		client.getConnectionManager().shutdown();
 	}
 
 	public static class GetRunnable implements Runnable {
